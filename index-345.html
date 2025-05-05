@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electric Car Efficiency Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+            color: #333;
+        }
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            padding: 50px 0;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        .description {
+            font-size: 18px;
+            color: #555;
+        }
+        .chart-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 50px;
+        }
+        .chart {
+            width: 45%;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #333;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Electric Car Efficiency Dashboard</h1>
+            <p class="description">Explore the efficiency, range, price, and share of top electric vehicles. Choose the best electric car for your needs.</p>
+        </header>
+
+        <!-- Chart Section -->
+        <div class="chart-container">
+            <!-- Electric Mileage Bar Chart -->
+            <div class="chart">
+                <h3>Top 10 Electric Cars by Efficiency (km/kWh)</h3>
+                <canvas id="efficiencyChart"></canvas>
+                <p class="description">This chart shows the electric mileage (km per kWh) of the top 10 most efficient electric cars. Higher values indicate better efficiency.</p>
+            </div>
+
+            <!-- Range Line Chart -->
+            <div class="chart">
+                <h3>Electric Vehicle Range Comparison (km)</h3>
+                <canvas id="rangeChart"></canvas>
+                <p class="description">This chart compares the range (in kilometers) of the top electric cars. Longer ranges are ideal for long-distance travel.</p>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <!-- Price Bar Chart -->
+            <div class="chart">
+                <h3>Electric Vehicle Price Comparison (€)</h3>
+                <canvas id="priceChart"></canvas>
+                <p class="description">This chart compares the prices of the top 10 electric vehicles. Higher prices typically reflect premium features and range.</p>
+            </div>
+
+            <!-- Efficiency Share Pie Chart -->
+            <div class="chart">
+                <h3>Efficiency Share by Model</h3>
+                <canvas id="efficiencyShareChart"></canvas>
+                <p class="description">This pie chart illustrates the efficiency share of each model in relation to others. It highlights the top-performing models in terms of energy efficiency.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Electric Car Efficiency Dashboard | Data Visualized using Charts.js</p>
+    </footer>
+
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Include Chart.js Datalabels plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+    <script>
+        // Sample data for Top 10 Electric Cars (update with your dataset)
+        const carData = [
+            { brand: 'Lightyear', model: 'One', electric_mileage_km_per_kwh: 11.58, range_km: 551.98, priceeuro: 149000 },
+            { brand: 'Hyundai', model: 'IONIQ Electric', electric_mileage_km_per_kwh: 7.76, range_km: 243.99, priceeuro: 34459 },
+            { brand: 'Hyundai', model: 'Kona Electric 39 kWh', electric_mileage_km_per_kwh: 7.75, range_km: 274.74, priceeuro: 33971 },
+            { brand: 'Tesla', model: 'Model 3 Standard Range Plus', electric_mileage_km_per_kwh: 7.62, range_km: 298.63, priceeuro: 46380 },
+            { brand: 'Mini', model: 'Cooper SE', electric_mileage_km_per_kwh: 7.55, range_km: 179.32, priceeuro: 31681 },
+            { brand: 'Sono', model: 'Sion', electric_mileage_km_per_kwh: 7.51, range_km: 237.49, priceeuro: 25500 },
+            { brand: 'BMW', model: 'i3 120 Ah', electric_mileage_km_per_kwh: 7.43, range_km: 233.21, priceeuro: 38017 },
+            { brand: 'Tesla', model: 'Model 3 Long Range Dual Motor', electric_mileage_km_per_kwh: 7.42, range_km: 451.98, priceeuro: 55480 },
+            { brand: 'Tesla', model: 'Model Y Long Range Dual Motor', electric_mileage_km_per_kwh: 7.40, range_km: 431.48, priceeuro: 58620 },
+            { brand: 'Volkswagen', model: 'ID.3 Pro', electric_mileage_km_per_kwh: 7.35, range_km: 331.72, priceeuro: 33000 }
+        ];
+
+        // Chart 1: Electric Mileage (km/kWh) Bar Chart
+        const efficiencyChart = new Chart(document.getElementById('efficiencyChart'), {
+            type: 'bar',
+            data: {
+                labels: carData.map(car => car.model),
+                datasets: [{
+                    label: 'Electric Mileage (km/kWh)',
+                    data: carData.map(car => car.electric_mileage_km_per_kwh),
+                    backgroundColor: '#4caf50',
+                }]
+            },
+            options: {
+                scales: {
+                    x: { title: { display: true, text: 'Electric Car Model' }},
+                    y: { title: { display: true, text: 'Electric Mileage (km/kWh)' }}
+                },
+                responsive: true,
+                plugins: { legend: { display: false } },
+            }
+        });
+
+        // Chart 2: Range Comparison (km) Line Chart
+        const rangeChart = new Chart(document.getElementById('rangeChart'), {
+            type: 'line',
+            data: {
+                labels: carData.map(car => car.model),
+                datasets: [{
+                    label: 'Range (km)',
+                    data: carData.map(car => car.range_km),
+                    borderColor: '#00bcd4',
+                    fill: false,
+                    tension: 0.2,
+                }]
+            },
+            options: {
+                scales: {
+                    x: { title: { display: true, text: 'Electric Car Model' }},
+                    y: { title: { display: true, text: 'Range (km)' }}
+                },
+                responsive: true,
+                plugins: { legend: { display: false } },
+            }
+        });
+
+        // Chart 3: Price Comparison (€) Bar Chart
+        const priceChart = new Chart(document.getElementById('priceChart'), {
+            type: 'bar',
+            data: {
+                labels: carData.map(car => car.model),
+                datasets: [{
+                    label: 'Price (€)',
+                    data: carData.map(car => car.priceeuro),
+                    backgroundColor: '#f44336',
+                }]
+            },
+            options: {
+                scales: {
+                    x: { title: { display: true, text: 'Electric Car Model' }},
+                    y: { title: { display: true, text: 'Price (€)' }}
+                },
+                responsive: true,
+                plugins: { legend: { display: false } },
+            }
+        });
+
+        // Chart 4: Efficiency Share by Model Pie Chart with % labels
+        const efficiencyShareChart = new Chart(document.getElementById('efficiencyShareChart'), {
+            type: 'pie',
+            data: {
+                labels: carData.map(car => car.model),
+                datasets: [{
+                    label: 'Efficiency Share by Model',
+                    data: carData.map(car => car.electric_mileage_km_per_kwh),
+                    backgroundColor: [
+                        '#ffeb3b', '#ff9800', '#f44336', '#00bcd4', '#8bc34a',
+                        '#e91e63', '#673ab7', '#3f51b5', '#9c27b0', '#00e676'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: {
+                        callbacks: {
+                            label: (context) => {
+                                const label = context.label || '';
+                                const value = context.raw;
+                                return `${label}: ${value.toFixed(2)} km/kWh`;
+                            }
+                        }
+                    },
+                    datalabels: {
+                        color: '#000',
+                        formatter: (value, context) => {
+                            const data = context.chart.data.datasets[0].data;
+                            const total = data.reduce((a, b) => a + b, 0);
+                            const percentage = (value / total) * 100;
+                            return percentage.toFixed(1) + '%';
+                        },
+                        font: {
+                            weight: 'bold'
+                        }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        });
+    </script>
+
+</body>
+</html>
